@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import redis.clients.jedis.JedisCluster.Reset;
 import redis.clients.util.SafeEncoder;
 
 public class Client extends BinaryClient implements Commands {
@@ -585,6 +586,24 @@ public class Client extends BinaryClient implements Commands {
 	}
 	zinterstore(SafeEncoder.encode(dstkey), params, bsets);
     }
+    
+    public void zlexcount(final String key, final String min, final String max) {
+	zlexcount(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max));
+    }
+    
+    public void zrangeByLex(final String key, final String min, final String max) {
+	zrangeByLex(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max));
+    }
+    
+    public void zrangeByLex(final String key, final String min, final String max, 
+	    final int offset, final int count) {
+	zrangeByLex(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max), 
+		offset, count);
+    }
+    
+    public void zremrangeByLex(final String key, final String min, final String max) {
+	zremrangeByLex(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max));
+    }
 
     public void strlen(final String key) {
 	strlen(SafeEncoder.encode(key));
@@ -928,6 +947,10 @@ public class Client extends BinaryClient implements Commands {
 	cluster(Protocol.CLUSTER_MEET, ip, String.valueOf(port));
     }
 
+    public void clusterReset(Reset resetType) {
+	cluster(Protocol.CLUSTER_RESET, resetType.toString());
+    }
+
     public void clusterAddSlots(final int... slots) {
 	cluster(Protocol.CLUSTER_ADDSLOTS, slots);
     }
@@ -1010,5 +1033,9 @@ public void clusterSetSlotStable(final int slot) {
 
     public void clusterFailover() {
 	cluster(Protocol.CLUSTER_FAILOVER);
+    }
+    
+    public void clusterSlots() {
+	cluster(Protocol.CLUSTER_SLOTS);
     }
 }

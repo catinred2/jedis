@@ -125,12 +125,18 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands,
 	Jedis j = getShard(arg);
 	return j.blpop(arg);
     }
-
+    public List<String> blpop(int timeout,String key){
+	Jedis j = getShard(key);
+	return j.blpop(timeout,key);
+    }
     public List<String> brpop(String arg) {
 	Jedis j = getShard(arg);
 	return j.brpop(arg);
     }
-
+    public List<String> brpop(int timeout,String key) {
+	Jedis j = getShard(key);
+	return j.brpop(timeout,key);
+    }
     public Long decrBy(String key, long integer) {
 	Jedis j = getShard(key);
 	return j.decrBy(key, integer);
@@ -535,6 +541,27 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands,
     public Long zremrangeByScore(String key, String start, String end) {
 	Jedis j = getShard(key);
 	return j.zremrangeByScore(key, start, end);
+    }
+    
+    @Override
+    public Long zlexcount(final String key, final String min, final String max) {
+	return getShard(key).zlexcount(key, min, max);
+    }
+
+    @Override
+    public Set<String> zrangeByLex(final String key, final String min, final String max) {
+	return getShard(key).zrangeByLex(key, min, max);
+    }
+
+    @Override
+    public Set<String> zrangeByLex(final String key, final String min, final String max,
+	    final int offset, final int count) {
+	return getShard(key).zrangeByLex(key, min, max, offset, count);
+    }
+
+    @Override
+    public Long zremrangeByLex(final String key, final String min, final String max) {
+	return getShard(key).zremrangeByLex(key, min, max);
     }
 
     public Long linsert(String key, LIST_POSITION where, String pivot,
