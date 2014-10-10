@@ -23,7 +23,7 @@ public class JedisClusterInfoCache {
     private final Lock r = rwl.readLock();
     private final Lock w = rwl.writeLock();
     private final GenericObjectPoolConfig poolConfig;
-    
+
     public JedisClusterInfoCache(final GenericObjectPoolConfig poolConfig) {
 	this.poolConfig = poolConfig;
     }
@@ -97,7 +97,8 @@ public class JedisClusterInfoCache {
 	    if (nodes.containsKey(nodeKey))
 		return;
 
-	    JedisPool nodePool = new JedisPool(poolConfig, node.getHost(), node.getPort());
+	    JedisPool nodePool = new JedisPool(poolConfig, node.getHost(),
+		    node.getPort());
 	    nodes.put(nodeKey, nodePool);
 	} finally {
 	    w.unlock();
@@ -119,7 +120,7 @@ public class JedisClusterInfoCache {
 	}
     }
 
-    public synchronized void assignSlotsToNode(List<Integer> targetSlots,
+    public void assignSlotsToNode(List<Integer> targetSlots,
 	    HostAndPort targetNode) {
 	w.lock();
 	try {
@@ -138,7 +139,7 @@ public class JedisClusterInfoCache {
 	}
     }
 
-    public synchronized JedisPool getNode(String nodeKey) {
+    public JedisPool getNode(String nodeKey) {
 	r.lock();
 	try {
 	    return nodes.get(nodeKey);
@@ -147,7 +148,7 @@ public class JedisClusterInfoCache {
 	}
     }
 
-    public synchronized JedisPool getSlotPool(int slot) {
+    public JedisPool getSlotPool(int slot) {
 	r.lock();
 	try {
 	    return slots.get(slot);
@@ -156,7 +157,7 @@ public class JedisClusterInfoCache {
 	}
     }
 
-    public synchronized Map<String, JedisPool> getNodes() {
+    public Map<String, JedisPool> getNodes() {
 	r.lock();
 	try {
 	    return new HashMap<String, JedisPool>(nodes);
