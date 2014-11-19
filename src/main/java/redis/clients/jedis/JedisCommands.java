@@ -48,6 +48,8 @@ public interface JedisCommands {
 
     Long incrBy(String key, long integer);
 
+    Double incrByFloat(String key, double value);
+
     Long incr(String key);
 
     Long append(String key, String value);
@@ -216,10 +218,18 @@ public interface JedisCommands {
 
     Long rpushx(String key, String... string);
 
+    /**
+     * @deprecated unusable command, this will be removed in 3.0.0.
+     */
+    @Deprecated
     List<String> blpop(String arg);
 
     List<String> blpop(int timeout, String key);
 
+    /**
+     * @deprecated unusable command, this will be removed in 3.0.0.
+     */
+    @Deprecated
     List<String> brpop(String arg);
 
     List<String> brpop(int timeout, String key);
